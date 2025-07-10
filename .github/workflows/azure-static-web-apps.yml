@@ -11,15 +11,6 @@ on:
     paths: 
       - '1-Authentication/1-sign-in-react/SPA/**'
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy to'
-        required: true
-        default: 'production'
-      force_deploy:
-        description: 'Force deploy even if no changes detected'
-        required: false
-        default: 'false'
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
