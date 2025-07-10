@@ -35,6 +35,13 @@ jobs:
       - name: Build application
         run: npm run build
         working-directory: ./1-Authentication/1-sign-in-react/SPA
+        env:
+          # Add your environment variables here
+          REACT_APP_CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
+          REACT_APP_AUTH: ${{ secrets.REACT_APP_AUTH }}
+          REACT_APP_REDIRECT: ${{ secrets.REACT_APP_REDIRECT }}
+          # Disable source maps for production builds
+          GENERATE_SOURCEMAP: false
       
       - name: Verify environment variables
         run: |
