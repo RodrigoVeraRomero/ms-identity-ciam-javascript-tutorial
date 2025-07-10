@@ -10,7 +10,16 @@ on:
     branches: [ "main" ]
     paths: 
       - '1-Authentication/1-sign-in-react/SPA/**'
-
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+      force_deploy:
+        description: 'Force deploy even if no changes detected'
+        required: false
+        default: 'false'
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
@@ -43,6 +52,15 @@ jobs:
           REACT_APP_REDIRECT: ${{ secrets.REACT_APP_REDIRECT }}
           # Disable source maps for production builds
           GENERATE_SOURCEMAP: false
+      
+      - name: Verify environment variables
+        run: |
+          echo "Checking environment variables..."
+          echo "REACT_APP_CLIENT_ID is set: ${{ secrets.REACT_APP_CLIENT_ID != '' }}"
+          echo "REACT_APP_AUTH is set: ${{ secrets.REACT_APP_AUTH != '' }}"
+          echo "REACT_APP_REDIRECT is set: ${{ secrets.REACT_APP_REDIRECT != '' }}"
+          echo "API TOKEN is set: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN != '' }}"
+
 
       - name: Build And Deploy
         id: builddeploy
