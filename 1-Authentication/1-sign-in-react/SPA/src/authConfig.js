@@ -11,25 +11,21 @@ import { LogLevel } from '@azure/msal-browser';
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/configuration.md 
  */
 
-// Utiliza las variables inyectadas por Azure Static Web Apps
-const env = window.__env__ || {};
-
 export const msalConfig = {
     auth: {
-        clientId: env.REACT_APP_CLIENT_ID, // App Setting de Azure SWA
-        authority: env.REACT_APP_AUTH,
-        redirectUri: env.REACT_APP_REDIRECT,
-        postLogoutRedirectUri: '/',
-        navigateToLoginRequestUrl: false,
+        clientId: process.env.REACT_APP_CLIENT_ID, // This is the ONLY mandatory field that you need to supply.
+        authority: process.env.REACT_APP_AUTH, // Replace the placeholder with your tenant subdomain 
+        redirectUri: process.env.REACT_APP_REDIRECT, // Points to window.location.origin. You must register this URI on Microsoft Entra admin center/App Registration.
+        postLogoutRedirectUri: '/', // Indicates the page to navigate after logout.
+        navigateToLoginRequestUrl: false, // If "true", will navigate back to the original request location before processing the auth code response.
     },
     cache: {
-        cacheLocation: 'sessionStorage',
-        storeAuthStateInCookie: false,
+        cacheLocation: 'sessionStorage', // Configures cache location. "sessionStorage" is more secure, but "localStorage" gives you SSO between tabs.
+        storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
     },
     system: {
         loggerOptions: {
             loggerCallback: (level, message, containsPii) => {
-                console.log(env.REACT_APP_CLIENT_ID);
                 if (containsPii) {
                     return;
                 }
