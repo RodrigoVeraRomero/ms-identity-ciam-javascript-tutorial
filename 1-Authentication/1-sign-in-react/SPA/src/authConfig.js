@@ -26,6 +26,7 @@ export const msalConfig = {
     system: {
         loggerOptions: {
             loggerCallback: (level, message, containsPii) => {
+                console.log(process.env.REACT_APP_CLIENT_ID);
                 if (containsPii) {
                     return;
                 }
