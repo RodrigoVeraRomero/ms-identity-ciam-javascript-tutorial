@@ -11,33 +11,11 @@ import { LogLevel } from '@azure/msal-browser';
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/configuration.md 
  */
 
-// Obtiene la configuración de window.authConfig (definido en public/config.js)
-// y usa process.env como fallback para desarrollo local
-const getConfig = () => {
-    if (window.authConfig) {
-        return {
-            clientId: window.authConfig.clientId || process.env.REACT_APP_CLIENT_ID || '',
-            authority: window.authConfig.authority || process.env.REACT_APP_AUTH || '',
-            redirectUri: window.authConfig.redirectUri || process.env.REACT_APP_REDIRECT || window.location.origin
-        };
-    }
-    
-    return {
-        clientId: process.env.REACT_APP_CLIENT_ID || '',
-        authority: process.env.REACT_APP_AUTH || '',
-        redirectUri: process.env.REACT_APP_REDIRECT || window.location.origin
-    };
-};
-
-// Obtiene la configuración en tiempo de ejecución
-const runtimeConfig = getConfig();
-console.log('Runtime config:', runtimeConfig);
-
 export const msalConfig = {
     auth: {
-        clientId: runtimeConfig.clientId, // Usa la configuración en tiempo de ejecución
-        authority: runtimeConfig.authority, // Usa la configuración en tiempo de ejecución
-        redirectUri: runtimeConfig.redirectUri, // Usa la configuración en tiempo de ejecución
+        clientId: process.env.REACT_APP_CLIENT_ID, // This is the ONLY mandatory field that you need to supply.
+        authority: process.env.REACT_APP_AUTH, // Replace the placeholder with your tenant subdomain 
+        redirectUri: process.env.REACT_APP_REDIRECT, // Points to window.location.origin. You must register this URI on Microsoft Entra admin center/App Registration.
         postLogoutRedirectUri: '/', // Indicates the page to navigate after logout.
         navigateToLoginRequestUrl: false, // If "true", will navigate back to the original request location before processing the auth code response.
     },
@@ -47,7 +25,10 @@ export const msalConfig = {
     },
     system: {
         loggerOptions: {
+        
             loggerCallback: (level, message, containsPii) => {
+                console.log(process.env.REACT_APP_CLIENT_ID);
+                console.log(process.env.REACT_APP_REDIRECT);
                 if (containsPii) {
                     return;
                 }
